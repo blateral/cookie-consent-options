@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="cookie-consent">
+            <script type="text/json">
+                {
+                    "zIndex": 1,
+                    "icon": "https://unsplash.it/100",
+                    "title": "Verwendung von Cookies für Analyse- und Marketingzwecke",
+                    "dateFormat": "DD. MMMM YYYY"
+                }
+            </script>
+        </div>
+
+        <button data-consent-button>Open consent banner</button>
+        <button class="cookie-consent-button">Open consent banner</button>
+        <div data-consent-status>Cookie Status</div>
+        <div class="cookie-consent-status">Cookie Status</div>
+
+        <script type="text/cookie-consent-script">
+            console.log('b.ig brother is watching you! 👀');
+        </script>
+
+        <script src="cookie-consent.min.js"></script>
+    </body>
+</html>
