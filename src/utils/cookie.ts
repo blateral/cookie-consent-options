@@ -36,6 +36,9 @@ export interface CookieContent {
         checked?: boolean;
         disabled?: boolean;
     }[];
+    toggleText?: string;
+    toggleLabelMore?: string;
+    toggleLabelLess?: string;
 }
 export type CookieContentInitalProps = Partial<CookieContent>;
 
@@ -53,7 +56,9 @@ export const CookieContentDefaults: CookieContent = {
         },
         { label: "Statistik", value: "stats" },
         { label: "Marketing", value: "marketing" }
-    ]
+    ],
+    toggleLabelLess: "Details ausblenden",
+    toggleLabelMore: "Details anzeigen"
 };
 
 export interface CookieConsentData {

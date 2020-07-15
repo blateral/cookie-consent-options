@@ -58,7 +58,10 @@ const generateCookieMarkup = ({
     handleAccept,
     handleDecline,
     options,
-    handleOptionChange
+    handleOptionChange,
+    toggleText,
+    toggleLabelMore,
+    toggleLabelLess
 }: CookieContent & {
     $container: Element;
     store: Store;
@@ -128,6 +131,28 @@ const generateCookieMarkup = ({
 
     $CookieViewContent.appendChild($CookieOptions);
 
+    let $CookieToggleText: Element | undefined = undefined;
+    let $CookieToggleBtn: HTMLElement | undefined = undefined;
+
+    if (toggleText) {
+        $CookieToggleText = document.createElement("div");
+        $CookieToggleText.className = "CookieConsent__toggle-text  isHidden";
+        $CookieToggleText.innerHTML = toggleText;
+
+        $CookieViewContent.appendChild($CookieToggleText);
+
+        $CookieToggleBtn = document.createElement("div");
+        $CookieToggleBtn.className =
+            "CookieConsent__toggle-btn  CookieConsent__toggle-btn--more";
+        $CookieToggleBtn.innerText = toggleLabelMore as string;
+        $CookieToggleBtn.addEventListener("click", () =>
+            store.setState({
+                isToggleVisible: !store.getState().isToggleVisible
+            })
+        );
+        $CookieViewContent.appendChild($CookieToggleBtn);
+    }
+
     const $CookieActions = document.createElement("div");
     $CookieActions.className = "CookieConsent__actions";
 
@@ -175,6 +200,19 @@ const generateCookieMarkup = ({
                         element.getAttribute("value")
                     ) > -1;
             });
+
+        if ($CookieToggleText && $CookieToggleBtn) {
+            $CookieToggleText.className = state.isToggleVisible
+                ? "CookieConsent__toggle-text"
+                : "CookieConsent__toggle-text  isHidden";
+
+            $CookieToggleBtn.className = state.isToggleVisible
+                ? "CookieConsent__toggle-btn  CookieConsent__toggle-btn--less"
+                : "CookieConsent__toggle-btn  CookieConsent__toggle-btn--more";
+            $CookieToggleBtn.innerText = (state.isToggleVisible
+                ? toggleLabelLess
+                : toggleLabelMore) as string;
+        }
     };
 };
 
@@ -206,7 +244,10 @@ if ($mountPointCookie) {
         text,
         options,
         labelAccept,
-        labelDecline
+        labelDecline,
+        toggleText,
+        toggleLabelMore,
+        toggleLabelLess
     } = {
         ...CookieConfigDefaults,
         ...CookieContentDefaults,
@@ -215,6 +256,7 @@ if ($mountPointCookie) {
 
     const store = createStore({
         isVisible: false,
+        isToggleVisible: false,
         selectedOptions: options
             .filter(({ checked }) => checked)
             .map(({ value }) => value)
@@ -230,6 +272,9 @@ if ($mountPointCookie) {
         labelDecline,
         options,
         zIndex,
+        toggleLabelLess,
+        toggleLabelMore,
+        toggleText,
         handleDecline: () => {
             const selectedOptions = store.getState().selectedOptions;
             setCookie<CookieConsentData>(
