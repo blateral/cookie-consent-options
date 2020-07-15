@@ -102,7 +102,8 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
                             name,
                             {
                                 consent: false,
-                                updatedAt: new Date().getTime()
+                                updatedAt: new Date().getTime(),
+                                selectedOptions: []
                             },
                             lifetime
                         );
@@ -114,7 +115,8 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
                             name,
                             {
                                 consent: true,
-                                updatedAt: new Date().getTime()
+                                updatedAt: new Date().getTime(),
+                                selectedOptions: []
                             },
                             lifetime
                         );
