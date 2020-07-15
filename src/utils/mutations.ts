@@ -11,9 +11,11 @@ export const bindConsentButtons = (callback: () => void) => {
     }
 };
 
-export const activateTrackingScripts = () => {
+export const activateTrackingScripts = (key?: string) => {
     const scriptElements = document.querySelectorAll(
-        "script[type='text/consent_banner_script'], script[type='text/cookie-consent-script']"
+        `script[type='text/consent_banner_script${
+            key ? "_" + key : ""
+        }'], script[type='text/cookie-consent-script${key ? "-" + key : ""}']`
     );
 
     let i = scriptElements.length;

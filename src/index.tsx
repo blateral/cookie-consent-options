@@ -97,7 +97,6 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
             <div className={styles.CookieConsent__content}>
                 {children({
                     handleDecline: () => {
-                        console.log("decline");
                         setCookie<CookieConsentData>(
                             name,
                             {
@@ -110,7 +109,6 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
                         setIsVisible(false);
                     },
                     handleAccept: () => {
-                        console.log("accept");
                         setCookie<CookieConsentData>(
                             name,
                             {

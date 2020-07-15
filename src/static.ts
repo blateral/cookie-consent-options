@@ -201,7 +201,6 @@ if ($mountPointCookie) {
         zIndex,
         selectedOptions: store.getState().selectedOptions,
         handleDecline: () => {
-            console.log("decline");
             setCookie<CookieConsentData>(
                 name,
                 {
@@ -215,7 +214,6 @@ if ($mountPointCookie) {
             store.setState({ isVisible: false });
         },
         handleAccept: () => {
-            console.log("accept");
             setCookie<CookieConsentData>(
                 name,
                 {
@@ -297,7 +295,9 @@ if ($mountPointCookie) {
     updateStatusElements();
 
     bindConsentButtons(() => store.setState({ isVisible: true }));
-    const cookie = getCookie(name) as Cookie<CookieConsentData>;
+    const cookie = getCookie(name) as Cookie<
+        CookieConsentData & { selectedOptions: string }
+    >;
     const isInWhitelist = isUrlInWhitelist(
         window.location.pathname,
         urlWhitelist
@@ -305,6 +305,11 @@ if ($mountPointCookie) {
 
     if (!isInWhitelist) store.setState({ isVisible: !cookie });
     if (cookie && cookie.data.selectedOptions) {
-        activateTrackingScripts();
+        const selectedOptions = cookie.data.selectedOptions.split(",");
+        selectedOptions.forEach(option => {
+            activateTrackingScripts(option);
+        });
+
+        store.setState({ selectedOptions });
     }
 }

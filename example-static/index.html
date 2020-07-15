@@ -13,7 +13,17 @@
                     "zIndex": 1,
                     "icon": "https://unsplash.it/100",
                     "title": "Verwendung von Cookies für Analyse- und Marketingzwecke",
-                    "dateFormat": "DD. MMMM YYYY"
+                    "dateFormat": "DD. MMMM YYYY",
+                    "options": [
+                        {
+                            "label": "Notwendig",
+                            "value": "mandatory",
+                            "checked": true,
+                            "disabled": true
+                        },
+                        { "label": "Statistik", "value": "stats" },
+                        { "label": "Marketing", "value": "marketing" }
+                    ]
                 }
             </script>
         </div>
@@ -23,8 +33,11 @@
         <div data-consent-status>Cookie Status</div>
         <div class="cookie-consent-status">Cookie Status</div>
 
-        <script type="text/cookie-consent-script">
-            console.log('b.ig brother is watching you! 👀');
+        <script type="text/cookie-consent-script-stats">
+            console.log('b.ig brother is watching you! 👀 – stats');
+        </script>
+        <script type="text/cookie-consent-script-marketing">
+            console.log('b.ig brother is watching you! 👀 – marketing');
         </script>
 
         <script src="cookie-consent.min.js"></script>
