@@ -24,7 +24,6 @@
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 0);
-    text-align: center;
     background: #fff;
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
@@ -39,8 +38,8 @@
 
 .CookieConsent__icon {
     max-height: 80px;
-    margin-bottom: 20px;
-    display: inline-block;
+    margin: 0 auto 20px;
+    display: block;
 }
 
 .CookieConsent__title {
@@ -50,6 +49,7 @@
     font-size: 20px;
     font-weight: 700;
     line-height: 1.2;
+    text-align: center;
 }
 
 @media (min-width: 40em) {
@@ -78,6 +78,24 @@
 
 .CookieConsent__text a:hover {
     opacity: 0.6;
+}
+
+.CookieConsent__options {
+    margin-bottom: 20px;
+}
+
+.CookieConsent__option {
+    margin-right: 20px;
+}
+
+.CookieConsent__checkbox {
+}
+
+.CookieConsent__checkbox-label {
+    padding-left: 5px;
+}
+
+.CookieConsent__detail-toggle {
 }
 
 .CookieConsent__actions {
