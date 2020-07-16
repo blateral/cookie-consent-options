@@ -24,7 +24,6 @@
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 0);
-    text-align: center;
     background: #fff;
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
@@ -39,8 +38,8 @@
 
 .CookieConsent__icon {
     max-height: 80px;
-    margin-bottom: 20px;
-    display: inline-block;
+    margin: 0 auto 20px;
+    display: block;
 }
 
 .CookieConsent__title {
@@ -50,6 +49,7 @@
     font-size: 20px;
     font-weight: 700;
     line-height: 1.2;
+    text-align: center;
 }
 
 @media (min-width: 40em) {
@@ -78,6 +78,97 @@
 
 .CookieConsent__text a:hover {
     opacity: 0.6;
+}
+
+.CookieConsent__option-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.CookieConsent__options {
+    margin-bottom: 20px;
+}
+
+.CookieConsent__option {
+    margin-right: 20px;
+    white-space: nowrap;
+}
+
+.CookieConsent__checkbox {
+}
+
+.CookieConsent__checkbox-label {
+    padding-left: 5px;
+}
+
+.CookieConsent__toggle-btn {
+    margin-bottom: 30px;
+    padding-right: 1.5em;
+    display: inline-block;
+    position: relative;
+    border: none;
+    outline: none;
+    font-weight: 700;
+    font-size: 12px;
+    font-family: sans-serif;
+    text-decoration: underline;
+    color: inherit;
+    background: transparent;
+    transition: transform 0.2s ease-in-out;
+}
+
+.CookieConsent__toggle-btn::after {
+    content: "";
+    width: 0.7em;
+    height: 0.7em;
+    display: block;
+    position: absolute;
+    right: 0;
+    transform: rotate(45deg);
+    transform-origin: center;
+}
+
+.CookieConsent__toggle-btn--more::after {
+    bottom: 25%;
+    border-bottom: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+}
+
+.CookieConsent__toggle-btn--less::after {
+    top: 35%;
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+}
+
+@media (min-width: 40em) {
+    .CookieConsent__toggle-btn {
+        font-size: 14px;
+    }
+}
+
+.CookieConsent__toggle-btn:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.CookieConsent__toggle-text {
+    margin: 0;
+    margin-bottom: 20px;
+    font-size: 12px;
+    max-height: 120px;
+    overflow: auto;
+}
+
+@media (min-width: 40em) {
+    .CookieConsent__toggle-text {
+        font-size: 14px;
+    }
+}
+.CookieConsent__toggle-text.isHidden {
+    display: none;
 }
 
 .CookieConsent__actions {

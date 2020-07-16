@@ -97,24 +97,24 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
             <div className={styles.CookieConsent__content}>
                 {children({
                     handleDecline: () => {
-                        console.log("decline");
                         setCookie<CookieConsentData>(
                             name,
                             {
                                 consent: false,
-                                updatedAt: new Date().getTime()
+                                updatedAt: new Date().getTime(),
+                                selectedOptions: []
                             },
                             lifetime
                         );
                         setIsVisible(false);
                     },
                     handleAccept: () => {
-                        console.log("accept");
                         setCookie<CookieConsentData>(
                             name,
                             {
                                 consent: true,
-                                updatedAt: new Date().getTime()
+                                updatedAt: new Date().getTime(),
+                                selectedOptions: []
                             },
                             lifetime
                         );

@@ -9,6 +9,7 @@ export interface CookieConfig {
     timeFormat: string;
     lifetime: number;
     localeKey?: string;
+    domain?: string;
 }
 
 export type CookieConfigInitialProps = Partial<CookieConfig>;
@@ -30,19 +31,41 @@ export interface CookieContent {
     text: string;
     labelAccept: string;
     labelDecline: string;
+    options: {
+        label: string;
+        value: string;
+        checked?: boolean;
+        disabled?: boolean;
+    }[];
+    toggleText?: string;
+    toggleLabelMore?: string;
+    toggleLabelLess?: string;
 }
 export type CookieContentInitalProps = Partial<CookieContent>;
 
 export const CookieContentDefaults: CookieContent = {
     text:
         'Wir verwenden Cookies, um Zugriffe auf unsere Website zu analysieren. Dadurch können wir unsere Webseite für Sie verbessern. Unsere Partner führen diese Informationen möglicherweise mit weiteren Daten zusammen, die Sie ihnen bereitgestellt haben oder die im Rahmen der Nutzung der Dienste gesammelt wurden. Wenn Sie der Verwendung nicht zustimmen, benutzen wir ausschließlich Cookies, die für die Funktionalität der Webseite essentiell sind. Weitere Informationen finden Sie unter <a href="impressum">Impressum</a> und <a href="datenschutz">Datenschutz</a>.',
-    labelAccept: "Cookies akzeptieren",
-    labelDecline: "Cookies ablehnen"
+    labelAccept: "Alle auswählen und bestätigen",
+    labelDecline: "Auswahl bestätigen",
+    options: [
+        {
+            label: "Notwendig",
+            value: "mandatory",
+            checked: true,
+            disabled: true
+        },
+        { label: "Statistik", value: "stats" },
+        { label: "Marketing", value: "marketing" }
+    ],
+    toggleLabelLess: "Details ausblenden",
+    toggleLabelMore: "Details anzeigen"
 };
 
 export interface CookieConsentData {
     consent: boolean;
     updatedAt: number;
+    selectedOptions: string[];
 }
 
 // ************
@@ -58,7 +81,8 @@ export const setCookie = <T>(
     name: string,
     data: T,
     days: number = -1,
-    path: string = "/"
+    path: string = "/",
+    domain?: string
 ) => {
     let cookieString = `${name}=`;
 
@@ -72,6 +96,10 @@ export const setCookie = <T>(
     cookieString += encodeURIComponent(
         valueString.substr(0, valueString.length - 1)
     );
+
+    if (domain) {
+        cookieString += `; domain=${domain}`;
+    }
 
     // specify path
     cookieString += `; path=${path};`;

@@ -18,6 +18,14 @@ import {
     updateConsentStatusElements
 } from "./utils/mutations";
 
+interface Store {
+    getState: () => {
+        [key: string]: any;
+    };
+    setState: (newState: any) => void;
+    subscribe: (l: any) => void;
+}
+
 const createStore = (initialState = {}) => {
     let state: { [key: string]: any } = initialState;
     let listeners: Array<() => void> = [];
@@ -38,7 +46,9 @@ const createStore = (initialState = {}) => {
     };
 };
 
-const buildCookieMarkup = ({
+const generateCookieMarkup = ({
+    $container,
+    store,
     icon,
     title,
     text,
@@ -46,12 +56,21 @@ const buildCookieMarkup = ({
     labelDecline,
     zIndex,
     handleAccept,
-    handleDecline
+    handleDecline,
+    options,
+    handleOptionChange,
+    toggleText,
+    toggleLabelMore,
+    toggleLabelLess
 }: CookieContent & {
+    $container: Element;
+    store: Store;
     zIndex?: number;
     handleDecline: () => void;
     handleAccept: () => void;
+    handleOptionChange: (value: string) => void;
 }) => {
+    const state = store.getState();
     const $CookieView = document.createElement("div");
     $CookieView.className = "CookieConsent isHidden";
 
@@ -84,6 +103,62 @@ const buildCookieMarkup = ({
 
     $CookieViewContent.appendChild($CookieText);
 
+    const $CookieOptionContainer = document.createElement("div");
+    $CookieOptionContainer.className = "CookieConsent__option-container";
+
+    const $CookieOptions = document.createElement("div");
+    $CookieOptions.className = "CookieConsent__options";
+
+    options.forEach(({ label, value, checked, disabled }) => {
+        const $Option = document.createElement("label");
+        $Option.className = "CookieConsent__option";
+
+        const $Cb = document.createElement("input");
+        $Cb.type = "checkbox";
+        $Cb.className = "CookieConsent__checkbox";
+        $Cb.name = "cookie_consent_option";
+        $Cb.value = value;
+        $Cb.checked =
+            state.selectedOptions.indexOf(value) > -1 ? true : checked || false;
+        $Cb.disabled = disabled || false;
+        $Cb.addEventListener("change", () => handleOptionChange(value));
+
+        const $Label = document.createElement("span");
+        $Label.className = "CookieConsent__checkbox-label";
+        $Label.innerHTML = label;
+
+        $Option.appendChild($Cb);
+        $Option.appendChild($Label);
+        $CookieOptions.appendChild($Option);
+    });
+
+    $CookieOptionContainer.appendChild($CookieOptions);
+
+    let $CookieToggleText: Element | undefined = undefined;
+    let $CookieToggleBtn: HTMLElement | undefined = undefined;
+
+    if (toggleText) {
+        $CookieToggleText = document.createElement("div");
+        $CookieToggleText.className = "CookieConsent__toggle-text  isHidden";
+        $CookieToggleText.innerHTML = toggleText;
+
+        $CookieToggleBtn = document.createElement("div");
+        $CookieToggleBtn.className =
+            "CookieConsent__toggle-btn  CookieConsent__toggle-btn--more";
+        $CookieToggleBtn.innerText = toggleLabelMore as string;
+        $CookieToggleBtn.addEventListener("click", () =>
+            store.setState({
+                isToggleVisible: !store.getState().isToggleVisible
+            })
+        );
+
+        $CookieOptionContainer.appendChild($CookieToggleBtn);
+        $CookieViewContent.appendChild($CookieOptionContainer);
+        $CookieViewContent.appendChild($CookieToggleText);
+    } else {
+        $CookieViewContent.appendChild($CookieOptionContainer);
+    }
+
     const $CookieActions = document.createElement("div");
     $CookieActions.className = "CookieConsent__actions";
 
@@ -113,7 +188,38 @@ const buildCookieMarkup = ({
 
     $CookieView.appendChild($CookieViewContent);
 
-    return $CookieView;
+    $container.innerHTML = "";
+    $container.appendChild($CookieView);
+
+    return () => {
+        const state = store.getState();
+
+        $CookieView.className = state.isVisible
+            ? "CookieConsent"
+            : "CookieConsent isHidden";
+
+        $CookieOptions
+            .querySelectorAll('[name="cookie_consent_option"]')
+            .forEach((element: HTMLInputElement) => {
+                element.checked =
+                    state.selectedOptions.indexOf(
+                        element.getAttribute("value")
+                    ) > -1;
+            });
+
+        if ($CookieToggleText && $CookieToggleBtn) {
+            $CookieToggleText.className = state.isToggleVisible
+                ? "CookieConsent__toggle-text"
+                : "CookieConsent__toggle-text  isHidden";
+
+            $CookieToggleBtn.className = state.isToggleVisible
+                ? "CookieConsent__toggle-btn  CookieConsent__toggle-btn--less"
+                : "CookieConsent__toggle-btn  CookieConsent__toggle-btn--more";
+            $CookieToggleBtn.innerText = (state.isToggleVisible
+                ? toggleLabelLess
+                : toggleLabelMore) as string;
+        }
+    };
 };
 
 const $mountPointCookie = document.querySelector("#cookie-consent");
@@ -142,60 +248,97 @@ if ($mountPointCookie) {
         icon,
         title,
         text,
+        options,
         labelAccept,
-        labelDecline
+        labelDecline,
+        toggleText,
+        toggleLabelMore,
+        toggleLabelLess,
+        domain
     } = {
         ...CookieConfigDefaults,
         ...CookieContentDefaults,
         ...initialState
     } as CookieConfig & CookieContent;
 
-    const store = createStore({ isVisible: false });
+    const store = createStore({
+        isVisible: false,
+        isToggleVisible: false,
+        selectedOptions: options
+            .filter(({ checked }) => checked)
+            .map(({ value }) => value)
+    });
 
-    const $Cookie = buildCookieMarkup({
+    const render = generateCookieMarkup({
+        $container: $mountPointCookie,
+        store,
         icon,
         title,
         text,
         labelAccept,
         labelDecline,
+        options,
         zIndex,
+        toggleLabelLess,
+        toggleLabelMore,
+        toggleText,
         handleDecline: () => {
-            console.log("decline");
+            const selectedOptions = store.getState().selectedOptions;
             setCookie<CookieConsentData>(
                 name,
                 {
                     consent: false,
-                    updatedAt: new Date().getTime()
+                    updatedAt: new Date().getTime(),
+                    selectedOptions
                 },
-                lifetime
+                lifetime,
+                undefined,
+                domain
             );
 
             store.setState({ isVisible: false });
+            selectedOptions.forEach((option: string) => {
+                activateTrackingScripts(option);
+            });
         },
         handleAccept: () => {
-            console.log("accept");
+            const selectedOptions = options.map(option => option.value);
             setCookie<CookieConsentData>(
                 name,
                 {
                     consent: true,
-                    updatedAt: new Date().getTime()
+                    updatedAt: new Date().getTime(),
+                    selectedOptions
                 },
-                lifetime
+                lifetime,
+                undefined,
+                domain
             );
-            store.setState({ isVisible: false });
-            activateTrackingScripts();
+            store.setState({
+                isVisible: false,
+                selectedOptions
+            });
+
+            selectedOptions.forEach(option => {
+                activateTrackingScripts(option);
+            });
+        },
+        handleOptionChange: value => {
+            const selectedOptions = store.getState().selectedOptions;
+            selectedOptions.indexOf(value) > -1
+                ? store.setState({
+                      selectedOptions: selectedOptions.filter(
+                          (i: string) => i !== value
+                      )
+                  })
+                : store.setState({
+                      selectedOptions: [...selectedOptions, value]
+                  });
         }
     });
 
-    $mountPointCookie.innerHTML = "";
-    $mountPointCookie.appendChild($Cookie);
-
-    store.subscribe(() => {
-        // $Cookie.classList.toggle("isHidden", !store.getState().isVisible);
-        $Cookie.className = store.getState().isVisible
-            ? "CookieConsent"
-            : "CookieConsent isHidden";
-    });
+    render();
+    store.subscribe(render);
 
     const updateStatusElements = () => {
         const cookie = getCookie(name) as Cookie<CookieConsentData>;
@@ -206,9 +349,19 @@ if ($mountPointCookie) {
             ? consentAcceptStatusMsg
             : consentDeclineStatusMsg;
 
+        const oStr = cookie
+            ? ` (${options
+                  .filter(
+                      ({ value }) =>
+                          cookie.data.selectedOptions.indexOf(value) > -1
+                  )
+                  .map(({ label }) => label)
+                  .join(", ")})`
+            : "";
+
         updateConsentStatusElements(
             cookie,
-            str,
+            str + oStr,
             dateFormat,
             timeFormat,
             localeKey
@@ -219,14 +372,21 @@ if ($mountPointCookie) {
     updateStatusElements();
 
     bindConsentButtons(() => store.setState({ isVisible: true }));
-    const cookie = getCookie(name) as Cookie<CookieConsentData>;
+    const cookie = getCookie(name) as Cookie<
+        CookieConsentData & { selectedOptions: string }
+    >;
     const isInWhitelist = isUrlInWhitelist(
         window.location.pathname,
         urlWhitelist
     );
 
     if (!isInWhitelist) store.setState({ isVisible: !cookie });
-    if (cookie && cookie.data.consent) {
-        activateTrackingScripts();
+    if (cookie && cookie.data.selectedOptions) {
+        const selectedOptions = cookie.data.selectedOptions.split(",");
+        selectedOptions.forEach(option => {
+            activateTrackingScripts(option);
+        });
+
+        store.setState({ selectedOptions });
     }
 }
