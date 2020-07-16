@@ -17,6 +17,7 @@ import {
     activateTrackingScripts,
     updateConsentStatusElements
 } from "./utils/mutations";
+import { domain } from "process";
 
 interface Store {
     getState: () => {
@@ -253,7 +254,8 @@ if ($mountPointCookie) {
         labelDecline,
         toggleText,
         toggleLabelMore,
-        toggleLabelLess
+        toggleLabelLess,
+        domain
     } = {
         ...CookieConfigDefaults,
         ...CookieContentDefaults,
@@ -290,7 +292,9 @@ if ($mountPointCookie) {
                     updatedAt: new Date().getTime(),
                     selectedOptions
                 },
-                lifetime
+                lifetime,
+                undefined,
+                domain
             );
 
             store.setState({ isVisible: false });
@@ -307,7 +311,9 @@ if ($mountPointCookie) {
                     updatedAt: new Date().getTime(),
                     selectedOptions
                 },
-                lifetime
+                lifetime,
+                undefined,
+                domain
             );
             store.setState({
                 isVisible: false,

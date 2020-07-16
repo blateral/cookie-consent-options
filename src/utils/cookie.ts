@@ -9,6 +9,7 @@ export interface CookieConfig {
     timeFormat: string;
     lifetime: number;
     localeKey?: string;
+    domain?: string;
 }
 
 export type CookieConfigInitialProps = Partial<CookieConfig>;
@@ -80,7 +81,8 @@ export const setCookie = <T>(
     name: string,
     data: T,
     days: number = -1,
-    path: string = "/"
+    path: string = "/",
+    domain?: string
 ) => {
     let cookieString = `${name}=`;
 
@@ -94,6 +96,10 @@ export const setCookie = <T>(
     cookieString += encodeURIComponent(
         valueString.substr(0, valueString.length - 1)
     );
+
+    if (domain) {
+        cookieString += `; domain=${domain}`;
+    }
 
     // specify path
     cookieString += `; path=${path};`;
