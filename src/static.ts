@@ -17,7 +17,6 @@ import {
     activateTrackingScripts,
     updateConsentStatusElements
 } from "./utils/mutations";
-import { domain } from "process";
 
 interface Store {
     getState: () => {
