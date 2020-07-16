@@ -103,6 +103,9 @@ const generateCookieMarkup = ({
 
     $CookieViewContent.appendChild($CookieText);
 
+    const $CookieOptionContainer = document.createElement("div");
+    $CookieOptionContainer.className = "CookieConsent__option-container";
+
     const $CookieOptions = document.createElement("div");
     $CookieOptions.className = "CookieConsent__options";
 
@@ -129,7 +132,7 @@ const generateCookieMarkup = ({
         $CookieOptions.appendChild($Option);
     });
 
-    $CookieViewContent.appendChild($CookieOptions);
+    $CookieOptionContainer.appendChild($CookieOptions);
 
     let $CookieToggleText: Element | undefined = undefined;
     let $CookieToggleBtn: HTMLElement | undefined = undefined;
@@ -138,8 +141,6 @@ const generateCookieMarkup = ({
         $CookieToggleText = document.createElement("div");
         $CookieToggleText.className = "CookieConsent__toggle-text  isHidden";
         $CookieToggleText.innerHTML = toggleText;
-
-        $CookieViewContent.appendChild($CookieToggleText);
 
         $CookieToggleBtn = document.createElement("div");
         $CookieToggleBtn.className =
@@ -150,7 +151,12 @@ const generateCookieMarkup = ({
                 isToggleVisible: !store.getState().isToggleVisible
             })
         );
-        $CookieViewContent.appendChild($CookieToggleBtn);
+
+        $CookieOptionContainer.appendChild($CookieToggleBtn);
+        $CookieViewContent.appendChild($CookieOptionContainer);
+        $CookieViewContent.appendChild($CookieToggleText);
+    } else {
+        $CookieViewContent.appendChild($CookieOptionContainer);
     }
 
     const $CookieActions = document.createElement("div");

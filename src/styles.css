@@ -80,12 +80,21 @@
     opacity: 0.6;
 }
 
+.CookieConsent__option-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
 .CookieConsent__options {
     margin-bottom: 20px;
 }
 
 .CookieConsent__option {
     margin-right: 20px;
+    white-space: nowrap;
 }
 
 .CookieConsent__checkbox {
