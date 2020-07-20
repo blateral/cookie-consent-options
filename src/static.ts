@@ -305,7 +305,7 @@ if ($mountPointCookie) {
             }
         },
         handleAccept: () => {
-            const selectedOptions = store.getState().selectedOptions;
+            const selectedOptions = options.map(option => option.value);
             setCookie<CookieConsentData>(
                 name,
                 {
