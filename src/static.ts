@@ -109,7 +109,8 @@ const generateCookieMarkup = ({
     const $CookieOptions = document.createElement("div");
     $CookieOptions.className = "CookieConsent__options";
 
-    options.forEach(({ label, value, checked, disabled }) => {
+    for (let i = 0; i < options.length; i++) {
+        const { label, value, checked, disabled } = options[i];
         const $Option = document.createElement("label");
         $Option.className = "CookieConsent__option";
 
@@ -130,7 +131,7 @@ const generateCookieMarkup = ({
         $Option.appendChild($Cb);
         $Option.appendChild($Label);
         $CookieOptions.appendChild($Option);
-    });
+    }
 
     $CookieOptionContainer.appendChild($CookieOptions);
 
@@ -198,14 +199,16 @@ const generateCookieMarkup = ({
             ? "CookieConsent"
             : "CookieConsent isHidden";
 
-        $CookieOptions
-            .querySelectorAll('[name="cookie_consent_option"]')
-            .forEach((element: HTMLInputElement) => {
-                element.checked =
-                    state.selectedOptions.indexOf(
-                        element.getAttribute("value")
-                    ) > -1;
-            });
+        const elements = $CookieOptions.querySelectorAll(
+            '[name="cookie_consent_option"]'
+        );
+
+        for (let i = 0; i < elements.length; i++) {
+            (elements[i] as HTMLInputElement).checked =
+                state.selectedOptions.indexOf(
+                    (elements[i] as HTMLInputElement).getAttribute("value")
+                ) > -1;
+        }
 
         if ($CookieToggleText && $CookieToggleBtn) {
             $CookieToggleText.className = state.isToggleVisible
@@ -297,12 +300,12 @@ if ($mountPointCookie) {
             );
 
             store.setState({ isVisible: false });
-            selectedOptions.forEach((option: string) => {
-                activateTrackingScripts(option);
-            });
+            for (let i = 0; i < selectedOptions.length; i++) {
+                activateTrackingScripts(selectedOptions[i]);
+            }
         },
         handleAccept: () => {
-            const selectedOptions = options.map(option => option.value);
+            const selectedOptions = store.getState().selectedOptions;
             setCookie<CookieConsentData>(
                 name,
                 {
@@ -319,9 +322,9 @@ if ($mountPointCookie) {
                 selectedOptions
             });
 
-            selectedOptions.forEach(option => {
-                activateTrackingScripts(option);
-            });
+            for (let i = 0; i < selectedOptions.length; i++) {
+                activateTrackingScripts(selectedOptions[i]);
+            }
         },
         handleOptionChange: value => {
             const selectedOptions = store.getState().selectedOptions;
@@ -383,9 +386,9 @@ if ($mountPointCookie) {
     if (!isInWhitelist) store.setState({ isVisible: !cookie });
     if (cookie && cookie.data.selectedOptions) {
         const selectedOptions = cookie.data.selectedOptions.split(",");
-        selectedOptions.forEach(option => {
-            activateTrackingScripts(option);
-        });
+        for (let i = 0; i < selectedOptions.length; i++) {
+            activateTrackingScripts(selectedOptions[i]);
+        }
 
         store.setState({ selectedOptions });
     }
