@@ -352,15 +352,19 @@ if ($mountPointCookie) {
             ? consentAcceptStatusMsg
             : consentDeclineStatusMsg;
 
-        const oStr = cookie
-            ? ` (${options
-                  .filter(
-                      ({ value }) =>
-                          cookie.data.selectedOptions.indexOf(value) > -1
-                  )
-                  .map(({ label }) => label)
-                  .join(", ")})`
-            : "";
+        let oStr = "";
+
+        if (cookie && cookie.data.selectedOptions) {
+            oStr = cookie
+                ? ` (${options
+                      .filter(
+                          ({ value }) =>
+                              cookie.data.selectedOptions.indexOf(value) > -1
+                      )
+                      .map(({ label }) => label)
+                      .join(", ")})`
+                : "";
+        }
 
         updateConsentStatusElements(
             cookie,
