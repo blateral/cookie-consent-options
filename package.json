@@ -1,10 +1,13 @@
 {
     "name": "@blateral/cookie-consent-options",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Generic consent cookie",
     "author": "Alexander Rieß<alexander.riess@blateral.com>, Lukas Wochner<lukas.wochner@blateral.com>",
     "license": "MIT",
-    "repository": "blateral/cookie-consent-options",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/blateral/cookie-consent-options.git"
+    },
     "main": "dist/index.js",
     "module": "dist/index.modern.js",
     "source": "src/index.tsx",
