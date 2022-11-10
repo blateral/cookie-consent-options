@@ -15,7 +15,8 @@ import {
     CookieConsentData,
     getCookie,
     setCookie,
-    CookieConfigInitialProps
+    CookieConfigInitialProps,
+    CookieOption
 } from "./utils/cookie";
 import {
     bindConsentButtons,
@@ -23,16 +24,19 @@ import {
     activateTrackingScripts,
     updateConsentStatusElements
 } from "./utils/mutations";
+import Options from "./modules/Options";
 
 type RenderProps = {
     handleAccept: () => void;
     handleDecline: () => void;
+    optionChangeHandler: (value: string) => void;
     additionalDeclineProps: {
         ["data-gtm"]: string;
     };
     additionalAcceptProps: {
         ["data-gtm"]: string;
     };
+    options: CookieOption[];
 };
 
 const CookieConsent: React.FC<CookieConfigInitialProps & {
@@ -49,24 +53,35 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
         noCookieStatusMsg,
         dateFormat,
         timeFormat,
-        localeKey
+        localeKey,
+        options
     } = {
         ...CookieConfigDefaults,
         ...props
     } as CookieConfig;
     const [isVisible, setIsVisible] = React.useState(false);
+    const [selectedOptions, setSelectedOptions] = React.useState<string[]>(
+        options.filter(({ checked }) => checked).map(({ value }) => value)
+    );
 
     React.useEffect(() => {
         bindConsentButtons(() => setIsVisible(true));
 
-        const cookie = getCookie(name) as Cookie<CookieConsentData>;
+        const cookie = getCookie(name) as Cookie<
+            CookieConsentData & { selectedOptions: string }
+        >;
         const containsWhitelist = isUrlInWhitelist(
             window.location.pathname,
             urlWhitelist
         );
         if (!containsWhitelist) setIsVisible(!cookie);
-        if (cookie && cookie.data.consent) {
-            activateTrackingScripts();
+        if (cookie && cookie.data.selectedOptions) {
+            const selectedOptions = cookie.data.selectedOptions.split(",");
+            for (let i = 0; i < selectedOptions.length; i++) {
+                activateTrackingScripts(selectedOptions[i]);
+            }
+
+            setSelectedOptions(selectedOptions);
         }
     }, []);
 
@@ -79,9 +94,23 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
             ? consentAcceptStatusMsg
             : consentDeclineStatusMsg;
 
+        let oStr = "";
+
+        if (cookie && cookie.data.selectedOptions) {
+            oStr = cookie
+                ? ` (${options
+                      .filter(
+                          ({ value }) =>
+                              cookie.data.selectedOptions.indexOf(value) > -1
+                      )
+                      .map(({ label }) => label)
+                      .join(", ")})`
+                : "";
+        }
+
         updateConsentStatusElements(
             cookie,
-            str,
+            str + oStr,
             dateFormat,
             timeFormat,
             localeKey
@@ -102,25 +131,52 @@ const CookieConsent: React.FC<CookieConfigInitialProps & {
                             {
                                 consent: false,
                                 updatedAt: new Date().getTime(),
-                                selectedOptions: []
+                                selectedOptions
                             },
                             lifetime
                         );
                         setIsVisible(false);
+
+                        for (let i = 0; i < selectedOptions.length; i++) {
+                            activateTrackingScripts(selectedOptions[i]);
+                        }
                     },
                     handleAccept: () => {
+                        const allOptions = options.map(option => option.value);
                         setCookie<CookieConsentData>(
                             name,
                             {
                                 consent: true,
                                 updatedAt: new Date().getTime(),
-                                selectedOptions: []
+                                selectedOptions: allOptions
                             },
                             lifetime
                         );
                         setIsVisible(false);
-                        activateTrackingScripts();
+                        setSelectedOptions(allOptions);
+
+                        for (let i = 0; i < allOptions.length; i++) {
+                            activateTrackingScripts(allOptions[i]);
+                        }
                     },
+                    optionChangeHandler: value => {
+                        setSelectedOptions(prev => {
+                            if (prev.indexOf(value) > -1) {
+                                return [
+                                    ...prev.filter((i: string) => i !== value)
+                                ];
+                            } else {
+                                return [...prev, value];
+                            }
+                        });
+                    },
+                    options: options.map(option => {
+                        return {
+                            ...option,
+                            checked:
+                                selectedOptions.indexOf(option.value) !== -1
+                        };
+                    }),
                     additionalAcceptProps: {
                         ["data-gtm"]: "button-cookie-consent-accept"
                     },
@@ -139,5 +195,6 @@ export default {
     Title,
     Text,
     ActionContainer,
-    Action
+    Action,
+    Options
 };

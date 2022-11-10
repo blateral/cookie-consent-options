@@ -9,8 +9,10 @@ const App = () => {
             {({
                 handleAccept,
                 handleDecline,
+                optionChangeHandler,
                 additionalDeclineProps,
-                additionalAcceptProps
+                additionalAcceptProps,
+                options
             }) => (
                 <>
                     <Cookie.Icon src="http://unsplash.it/100" />
@@ -30,19 +32,23 @@ const App = () => {
                         <a href="impressum">Impressum</a> und{" "}
                         <a href="datenschutz">Datenschutz</a>.
                     </Cookie.Text>
+                    <Cookie.Options
+                        handleChange={optionChangeHandler}
+                        options={options}
+                    />
                     <Cookie.ActionContainer>
                         <Cookie.Action
                             onClick={handleDecline}
                             {...additionalDeclineProps}
                         >
-                            Cookies ablehnen
+                            Auswahl übernehmen
                         </Cookie.Action>
                         <Cookie.Action
                             onClick={handleAccept}
                             {...additionalAcceptProps}
                             type="accept"
                         >
-                            Cookies akzeptieren
+                            Alle Cookies erlauben
                         </Cookie.Action>
                     </Cookie.ActionContainer>
                 </>
