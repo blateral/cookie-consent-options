@@ -1,8 +1,8 @@
 {
-    "name": "@ic3m3n/cookie-consent-options",
-    "version": "0.1.0",
+    "name": "@blateral/cookie-consent-options",
+    "version": "0.2.0",
     "description": "Generic consent cookie",
-    "author": "Alexander Rieß<alexander.riess@blateral.com>",
+    "author": "Alexander Rieß<alexander.riess@blateral.com>, Lukas Wochner<lukas.wochner@blateral.com>",
     "license": "MIT",
     "repository": "blateral/cookie-consent-options",
     "main": "dist/index.js",
