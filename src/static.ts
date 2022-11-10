@@ -9,7 +9,8 @@ import {
     Cookie,
     CookieConsentData,
     getCookie,
-    setCookie
+    setCookie,
+    CookieOption
 } from "./utils/cookie";
 import {
     bindConsentButtons,
@@ -69,6 +70,7 @@ const generateCookieMarkup = ({
     handleDecline: () => void;
     handleAccept: () => void;
     handleOptionChange: (value: string) => void;
+    options: CookieOption[];
 }) => {
     const state = store.getState();
     const $CookieView = document.createElement("div");

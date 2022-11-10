@@ -10,6 +10,7 @@ export interface CookieConfig {
     lifetime: number;
     localeKey?: string;
     domain?: string;
+    options: CookieOption[];
 }
 
 export type CookieConfigInitialProps = Partial<CookieConfig>;
@@ -22,32 +23,7 @@ export const CookieConfigDefaults: CookieConfig = {
     dateFormat: "dd.mm.yy",
     timeFormat: "hh:mm",
     lifetime: 365,
-    localeKey: "de"
-};
-
-export interface CookieContent {
-    icon?: string;
-    title?: string;
-    text: string;
-    labelAccept: string;
-    labelDecline: string;
-    options: {
-        label: string;
-        value: string;
-        checked?: boolean;
-        disabled?: boolean;
-    }[];
-    toggleText?: string;
-    toggleLabelMore?: string;
-    toggleLabelLess?: string;
-}
-export type CookieContentInitalProps = Partial<CookieContent>;
-
-export const CookieContentDefaults: CookieContent = {
-    text:
-        'Wir verwenden Cookies, um Zugriffe auf unsere Website zu analysieren. Dadurch können wir unsere Webseite für Sie verbessern. Unsere Partner führen diese Informationen möglicherweise mit weiteren Daten zusammen, die Sie ihnen bereitgestellt haben oder die im Rahmen der Nutzung der Dienste gesammelt wurden. Wenn Sie der Verwendung nicht zustimmen, benutzen wir ausschließlich Cookies, die für die Funktionalität der Webseite essentiell sind. Weitere Informationen finden Sie unter <a href="impressum">Impressum</a> und <a href="datenschutz">Datenschutz</a>.',
-    labelAccept: "Alle auswählen und bestätigen",
-    labelDecline: "Auswahl bestätigen",
+    localeKey: "de",
     options: [
         {
             label: "Notwendig",
@@ -57,7 +33,34 @@ export const CookieContentDefaults: CookieContent = {
         },
         { label: "Statistik", value: "stats" },
         { label: "Marketing", value: "marketing" }
-    ],
+    ]
+};
+
+export interface CookieContent {
+    icon?: string;
+    title?: string;
+    text: string;
+    labelAccept: string;
+    labelDecline: string;
+    toggleText?: string;
+    toggleLabelMore?: string;
+    toggleLabelLess?: string;
+}
+
+export interface CookieOption {
+    label: string;
+    value: string;
+    checked?: boolean;
+    disabled?: boolean;
+}
+
+export type CookieContentInitalProps = Partial<CookieContent>;
+
+export const CookieContentDefaults: CookieContent = {
+    text:
+        'Wir verwenden Cookies, um Zugriffe auf unsere Website zu analysieren. Dadurch können wir unsere Webseite für Sie verbessern. Unsere Partner führen diese Informationen möglicherweise mit weiteren Daten zusammen, die Sie ihnen bereitgestellt haben oder die im Rahmen der Nutzung der Dienste gesammelt wurden. Wenn Sie der Verwendung nicht zustimmen, benutzen wir ausschließlich Cookies, die für die Funktionalität der Webseite essentiell sind. Weitere Informationen finden Sie unter <a href="impressum">Impressum</a> und <a href="datenschutz">Datenschutz</a>.',
+    labelAccept: "Alle auswählen und bestätigen",
+    labelDecline: "Auswahl bestätigen",
     toggleLabelLess: "Details ausblenden",
     toggleLabelMore: "Details anzeigen"
 };
