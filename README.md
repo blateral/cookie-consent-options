@@ -10,7 +10,7 @@ This repository consist of a generic implementation of a cookie consent banner f
 ## Install
 
 ```bash
-npm install --save cookie-consent
+npm install --save cookie-consent-options
 ```
 
 ## Commands
