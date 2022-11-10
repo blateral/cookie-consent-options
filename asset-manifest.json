@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/cookie-consent/static/css/main.8240fa95.chunk.css",
+    "main.js": "/cookie-consent/static/js/main.5a96ff84.chunk.js",
+    "main.js.map": "/cookie-consent/static/js/main.5a96ff84.chunk.js.map",
+    "runtime-main.js": "/cookie-consent/static/js/runtime-main.2e1db2db.js",
+    "runtime-main.js.map": "/cookie-consent/static/js/runtime-main.2e1db2db.js.map",
+    "static/js/2.b932df23.chunk.js": "/cookie-consent/static/js/2.b932df23.chunk.js",
+    "static/js/2.b932df23.chunk.js.map": "/cookie-consent/static/js/2.b932df23.chunk.js.map",
+    "index.html": "/cookie-consent/index.html",
+    "precache-manifest.13f33fb20302acef7eac3e7d7fc35190.js": "/cookie-consent/precache-manifest.13f33fb20302acef7eac3e7d7fc35190.js",
+    "service-worker.js": "/cookie-consent/service-worker.js",
+    "static/css/main.8240fa95.chunk.css.map": "/cookie-consent/static/css/main.8240fa95.chunk.css.map",
+    "static/js/2.b932df23.chunk.js.LICENSE.txt": "/cookie-consent/static/js/2.b932df23.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2e1db2db.js",
+    "static/js/2.b932df23.chunk.js",
+    "static/css/main.8240fa95.chunk.css",
+    "static/js/main.5a96ff84.chunk.js"
+  ]
+}
