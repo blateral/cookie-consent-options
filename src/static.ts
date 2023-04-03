@@ -19,12 +19,29 @@ import {
     updateConsentStatusElements
 } from "./utils/mutations";
 
+interface GlobalCookieConsentState {
+    $container: Element;
+    icon?: string;
+    title?: string;
+    text?: string;
+    labelAccept?: string;
+    labelDecline?: string;
+    options?: CookieOption[];
+    zIndex?: number;
+    toggleLabelLess?: string;
+    toggleLabelMore?: string;
+    toggleText?: string;
+
+    store: Store;
+}
+
 interface Store {
     getState: () => {
         [key: string]: any;
     };
     setState: (newState: any) => void;
     subscribe: (l: any) => void;
+    unsubscribe: (l: any) => void;
 }
 
 const createStore = (initialState = {}) => {
@@ -39,10 +56,16 @@ const createStore = (initialState = {}) => {
                 ...newState
             };
 
-            listeners.forEach(l => l());
+            listeners.forEach(l => l && l());
         },
         subscribe: (l: any) => {
             listeners = [...listeners, l];
+        },
+        unsubscribe: (l: any) => {
+            const index = listeners.indexOf(l);
+            if (index > -1) {
+                listeners.splice(index, 1);
+            }
         }
     };
 };
@@ -274,6 +297,21 @@ if ($mountPointCookie) {
             .map(({ value }) => value)
     });
 
+    (window as any).blatCookieConsent = {
+        $container: $mountPointCookie,
+        icon,
+        title,
+        text,
+        labelAccept,
+        labelDecline,
+        options,
+        zIndex,
+        toggleLabelLess,
+        toggleLabelMore,
+        toggleText,
+        store
+    } as GlobalCookieConsentState;
+
     const render = generateCookieMarkup({
         $container: $mountPointCookie,
         store,
@@ -302,6 +340,7 @@ if ($mountPointCookie) {
             );
 
             store.setState({ isVisible: false });
+
             for (let i = 0; i < selectedOptions.length; i++) {
                 activateTrackingScripts(selectedOptions[i]);
             }
