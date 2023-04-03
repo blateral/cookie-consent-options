@@ -138,6 +138,8 @@ In addition to the already in the React section mentioned properties the static 
 | **labelAccept**  | string |    "Cookies akzeptieren"     | Text of consent accept action element  |
 | **labelDecline** | string |      "Cookies ablehnen"      | Text of consent decline action element |
 
+You can also access the consent banner through the global `window` object by searchig for the `window.blatConsentBanner` variable.
+
 ## Date and Time formats
 
 To show the date and time of the last cookie consent interaction inside the status message you can pass specific placeholders to the string. They are replaced with the values on runtime.
