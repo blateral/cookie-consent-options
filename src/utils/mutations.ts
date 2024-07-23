@@ -19,20 +19,35 @@ export const activateTrackingScripts = (key?: string) => {
     );
 
     let i = scriptElements.length;
+    const newScriptElements: HTMLScriptElement[] = [];
+
     while (i--) {
         // create new script element to call it
-        let newScriptElement = document.createElement("script");
+        const newScriptElement = document.createElement("script");
         newScriptElement.type = "text/javascript";
-        newScriptElement.innerHTML = scriptElements[i].innerHTML;
 
-        // append / activate script
-        document.body.appendChild(newScriptElement);
+        if (scriptElements[i].hasAttribute("src")) {
+            newScriptElement.src = scriptElements[i].getAttribute("src")!;
+            newScriptElement.async = true;
+        } else {
+            newScriptElement.innerHTML = scriptElements[i].innerHTML;
+        }
+
+        // add new script tags to list
+        newScriptElements.push(newScriptElement);
 
         // delete old helper element
         if (scriptElements[i].parentNode) {
+            // eslint-disable-next-line no-unused-expressions
             scriptElements[i].parentNode?.removeChild(scriptElements[i]);
         }
-        // scriptElements[i].remove();
+    }
+
+    // append new script tags
+    i = newScriptElements.length;
+    while (i--) {
+        // append / activate script
+        document.body.appendChild(newScriptElements[i]);
     }
 };
 
